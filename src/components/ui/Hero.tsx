@@ -23,9 +23,18 @@ const Hero = ({
   ctaButtons = []
 }: HeroProps) => {
   return (
-    <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-primary-700 to-primary-500">
-      {/* Islamic Pattern Background */}
-      <div className="absolute inset-0 islamic-pattern opacity-10"></div>
+    <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
+      {/* Islamic Background Image */}
+      <div className="absolute inset-0 z-0">
+        <div 
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: `url('https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')`
+          }}
+        ></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-700/85 to-primary-500/85"></div>
+        <div className="absolute inset-0 islamic-pattern opacity-15"></div>
+      </div>
 
       {/* Content */}
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
