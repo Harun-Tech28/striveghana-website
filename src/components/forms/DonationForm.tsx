@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { motion } from 'framer-motion'
 import { Heart, CreditCard, CheckCircle, AlertCircle, Smartphone } from 'lucide-react'
+import { PaystackButton } from 'react-paystack'
 
 interface DonationFormData {
   amount: number
@@ -18,9 +19,10 @@ interface DonationFormData {
 }
 
 const DonationForm = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const [selectedAmount, setSelectedAmount] = useState<number | 'custom'>(25)
+  const [isFormValid, setIsFormValid] = useState(false)
+  const [formData, setFormData] = useState<DonationFormData | null>(null)
   
   const {
     register,
@@ -28,8 +30,9 @@ const DonationForm = () => {
     watch,
     setValue,
     reset,
-    formState: { errors }
+    formState: { errors, isValid }
   } = useForm<DonationFormData>({
+    mode: 'onChange',
     defaultValues: {
       amount: 25,
       frequency: 'once',
@@ -41,27 +44,68 @@ const DonationForm = () => {
   const watchFrequency = watch('frequency')
   const watchDonationType = watch('donationType')
   const watchPaymentMethod = watch('paymentMethod')
+  const watchEmail = watch('email')
+  const watchDonorName = watch('donorName')
 
   const predefinedAmounts = [25, 50, 100, 250]
 
-  const onSubmit = async (data: DonationFormData) => {
-    setIsSubmitting(true)
-    setSubmitStatus('idle')
+  const onPaymentSuccess = (reference: any) => {
+    console.log('Payment successful:', reference)
+    setSubmitStatus('success')
+    reset()
+    setSelectedAmount(25)
+    setFormData(null)
+  }
 
-    try {
-      // Simulate payment processing - replace with actual Stripe integration
-      await new Promise(resolve => setTimeout(resolve, 3000))
-      
-      console.log('Donation submitted:', data)
-      setSubmitStatus('success')
-      reset()
-      setSelectedAmount(25)
-    } catch (error) {
-      console.error('Donation error:', error)
-      setSubmitStatus('error')
-    } finally {
-      setIsSubmitting(false)
-    }
+  const onPaymentClose = () => {
+    console.log('Payment closed')
+    setFormData(null)
+  }
+
+  const onSubmit = async (data: DonationFormData) => {
+    setSubmitStatus('idle')
+    setFormData(data)
+    setIsFormValid(true)
+  }
+
+  // Paystack configuration
+  const finalAmount = formData ? (selectedAmount === 'custom' ? formData.customAmount || formData.amount : formData.amount) : 25
+  
+  const paystackConfig = {
+    reference: `STRIVE-${new Date().getTime()}`,
+    email: formData?.email || watchEmail || '',
+    amount: Math.round(finalAmount * 100 * 16), // Convert USD to GHS (approx rate) and kobo
+    publicKey: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || 'pk_test_xxxx',
+    text: 'Donate Now',
+    metadata: {
+      custom_fields: [
+        {
+          display_name: "Donor Name",
+          variable_name: "donor_name",
+          value: formData?.donorName || watchDonorName || ''
+        },
+        {
+          display_name: "Donation Type",
+          variable_name: "donation_type",
+          value: formData?.donationType || 'general'
+        },
+        {
+          display_name: "Frequency",
+          variable_name: "frequency",
+          value: formData?.frequency || 'once'
+        },
+        {
+          display_name: "Message",
+          variable_name: "message",
+          value: formData?.message || "No message"
+        }
+      ]
+    },
+    channels: formData?.paymentMethod === 'mobilemoney' 
+      ? ['mobile_money'] 
+      : ['card'],
+    onSuccess: onPaymentSuccess,
+    onClose: onPaymentClose,
   }
 
   const handleAmountSelect = (amount: number | 'custom') => {
@@ -336,23 +380,21 @@ const DonationForm = () => {
         )}
 
         {/* Submit Button */}
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full bg-accent-gold hover:bg-accent-gold-dark disabled:bg-gray-400 text-white font-semibold py-4 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
-        >
-          {isSubmitting ? (
-            <>
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-              <span>Processing...</span>
-            </>
-          ) : (
-            <>
-              <CreditCard className="w-5 h-5" />
-              <span>Donate Now</span>
-            </>
-          )}
-        </button>
+        {isFormValid && formData ? (
+          <PaystackButton 
+            {...paystackConfig} 
+            className="w-full bg-accent-gold hover:bg-accent-gold-dark text-white font-semibold py-4 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
+          />
+        ) : (
+          <button
+            type="submit"
+            disabled={!isValid}
+            className="w-full bg-accent-gold hover:bg-accent-gold-dark disabled:bg-gray-400 text-white font-semibold py-4 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
+          >
+            <CreditCard className="w-5 h-5" />
+            <span>Continue to Payment</span>
+          </button>
+        )}
 
         {/* Status Messages */}
         {submitStatus === 'success' && (

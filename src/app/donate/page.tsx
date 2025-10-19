@@ -168,12 +168,12 @@ export default function DonatePage() {
                 </a>
               </div>
               <div className="bg-white rounded-lg p-6">
-                <h4 className="font-semibold text-primary-600 mb-3">💳 International Donors</h4>
+                <h4 className="font-semibold text-primary-600 mb-3">💳 Secure Payments via Paystack</h4>
                 <p className="text-gray-700 mb-2">
-                  We accept Visa, Mastercard, and American Express from anywhere in the world.
+                  We accept international cards (Visa, Mastercard, Amex) and Ghana Mobile Money (MTN, Vodafone, AirtelTigo).
                 </p>
                 <p className="text-sm text-gray-600">
-                  All transactions are secure and encrypted. Your donation will be processed in USD.
+                  All transactions are secure and encrypted via Paystack. Amounts shown in USD, processed in GHS.
                 </p>
               </div>
             </div>
