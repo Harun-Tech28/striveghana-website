@@ -4,7 +4,13 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { motion } from 'framer-motion'
 import { Heart, CreditCard, CheckCircle, AlertCircle, Smartphone } from 'lucide-react'
-import { PaystackButton } from 'react-paystack'
+import dynamic from 'next/dynamic'
+
+// Dynamically import PaystackButton to avoid SSR issues
+const PaystackButton = dynamic(
+  () => import('react-paystack').then((mod) => mod.PaystackButton),
+  { ssr: false }
+)
 
 interface DonationFormData {
   amount: number
