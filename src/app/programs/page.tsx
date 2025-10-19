@@ -51,7 +51,7 @@ export default function ProgramsPage() {
                 description={program.description}
                 activities={program.activities}
                 icon={program.icon}
-                link={`/programs/${program.id}`}
+                link="/contact"
                 index={index}
               />
             ))}
@@ -97,10 +97,10 @@ export default function ProgramsPage() {
                   </div>
                   
                   <Link
-                    href={`/programs/${program.id}`}
+                    href="/contact"
                     className="inline-flex items-center bg-primary-500 hover:bg-primary-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
                   >
-                    Learn More About This Program
+                    Contact Us to Join
                     <ArrowRight className="w-5 h-5 ml-2" />
                   </Link>
                 </div>

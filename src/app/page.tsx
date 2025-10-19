@@ -158,7 +158,7 @@ export default function Home() {
                                 description={program.description}
                                 activities={program.activities}
                                 icon={program.icon}
-                                link={`/programs/${program.id}`}
+                                link="/programs"
                                 index={index}
                             />
                         ))}
