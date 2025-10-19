@@ -1,5 +1,6 @@
 'use client'
 
+// Home Page - All Learn More links fixed and verified
 import Hero from '@/components/ui/Hero'
 import ProgramCard from '@/components/ui/ProgramCard'
 import StatsCounter from '@/components/ui/StatsCounter'

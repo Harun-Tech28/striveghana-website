@@ -1,3 +1,4 @@
+// Programs Page - Learn More links redirect to contact page
 import { organizationData } from '@/data/organization'
 import ProgramCard from '@/components/ui/ProgramCard'
 import Link from 'next/link'
