@@ -147,10 +147,18 @@ export default function DonatePage() {
                   For assistance with donations or alternative payment methods:
                 </p>
                 <a 
-                  href="tel:+233248924349" 
+                  href="tel:+233542524571" 
                   className="text-accent-gold hover:text-accent-gold-dark font-bold text-lg block mb-1"
                 >
-                  +233 24 892 4349
+                  0542524571
+                </a>
+                <a 
+                  href="https://wa.me/233542524571" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-green-600 hover:text-green-700 font-medium text-sm block mb-2"
+                >
+                  💬 Chat on WhatsApp
                 </a>
                 <a 
                   href="mailto:striveghana@gmail.com" 

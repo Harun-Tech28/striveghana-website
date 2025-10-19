@@ -21,7 +21,7 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl md:text-6xl font-bold font-heading mb-4">
-              About Strive
+              About StriveGhana
             </h1>
             <div className="text-2xl arabic-text text-accent-gold mb-6">
               السعي

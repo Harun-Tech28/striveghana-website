@@ -10,7 +10,9 @@ export const organizationData = {
   contact: {
     email: "striveghana@gmail.com",
     website: "striveghana.org",
-    phone: "+233 24 892 4349",
+    phone: "+233 54 252 4571",
+    phoneDisplay: "0542524571",
+    whatsapp: "+233542524571",
     address: {
       poBox: "P O Box 222 Ejisu Ashanti",
       street: "99 BLK IX Ejisuman Near Family Hospital",

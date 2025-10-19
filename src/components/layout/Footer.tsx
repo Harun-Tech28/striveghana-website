@@ -70,9 +70,17 @@ const Footer = () => {
                 <div>
                   <a 
                     href={`tel:${organizationData.contact.phone}`}
-                    className="text-gray-300 hover:text-white transition-colors"
+                    className="text-gray-300 hover:text-white transition-colors block"
                   >
-                    {organizationData.contact.phone}
+                    {organizationData.contact.phoneDisplay}
+                  </a>
+                  <a 
+                    href={`https://wa.me/${organizationData.contact.whatsapp}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-green-400 hover:text-green-300 transition-colors text-sm"
+                  >
+                    💬 WhatsApp
                   </a>
                 </div>
               </div>

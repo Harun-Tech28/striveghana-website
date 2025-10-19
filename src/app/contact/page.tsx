@@ -68,10 +68,34 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                {/* Website */}
+                {/* Phone */}
                 <div className="flex items-start space-x-4">
                   <div className="w-12 h-12 bg-secondary-blue/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Users className="w-6 h-6 text-secondary-blue" />
+                    <Phone className="w-6 h-6 text-secondary-blue" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-primary-700 mb-1">Phone & WhatsApp</h3>
+                    <a 
+                      href={`tel:${contact.phone}`}
+                      className="text-gray-600 hover:text-primary-500 transition-colors block"
+                    >
+                      {contact.phoneDisplay}
+                    </a>
+                    <a 
+                      href={`https://wa.me/${contact.whatsapp}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-green-600 hover:text-green-700 transition-colors text-sm mt-1 inline-block"
+                    >
+                      💬 Chat on WhatsApp
+                    </a>
+                  </div>
+                </div>
+
+                {/* Website */}
+                <div className="flex items-start space-x-4">
+                  <div className="w-12 h-12 bg-secondary-teal/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Users className="w-6 h-6 text-secondary-teal" />
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-primary-700 mb-1">Website</h3>
@@ -84,8 +108,8 @@ export default function ContactPage() {
 
                 {/* Office Hours */}
                 <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-secondary-teal/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Clock className="w-6 h-6 text-secondary-teal" />
+                  <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Clock className="w-6 h-6 text-primary-500" />
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-primary-700 mb-1">Office Hours</h3>

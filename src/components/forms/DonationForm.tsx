@@ -292,7 +292,7 @@ const DonationForm = () => {
                 }
               })}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
-              placeholder="+233 24 892 4349"
+              placeholder="0542524571"
             />
             {errors.phone && (
               <p className="mt-1 text-sm text-red-600">{errors.phone.message}</p>
