@@ -29,10 +29,27 @@ const ContactForm = () => {
     setSubmitStatus('idle')
 
     try {
-      // Simulate API call - replace with actual EmailJS integration
-      await new Promise(resolve => setTimeout(resolve, 2000))
-      
-      console.log('Form submitted:', data)
+      // Send to our API endpoint
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: data.name,
+          email: data.email,
+          subject: `${data.interest}: ${data.subject}`,
+          message: data.message,
+        }),
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to send message')
+      }
+
+      console.log('Form submitted successfully:', result)
       setSubmitStatus('success')
       reset()
     } catch (error) {
