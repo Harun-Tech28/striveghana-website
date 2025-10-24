@@ -14,7 +14,13 @@ export async function sendContactNotification(data: ContactEmailData) {
   const { name, email, phone, subject, message } = data
 
   try {
-    const result = await resend.emails.send({
+    // Add timeout to prevent hanging
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Email timeout')), 10000)
+    )
+
+    const result = await Promise.race([
+      resend.emails.send({
       from: 'StriveGhana <onboarding@resend.dev>', // Resend's test email
       to: process.env.NOTIFICATION_EMAIL || 'striveghana1@gmail.com',
       subject: `New Contact Form: ${subject || 'General Inquiry'}`,
@@ -77,7 +83,9 @@ export async function sendContactNotification(data: ContactEmailData) {
           </div>
         </div>
       `,
-    })
+      }),
+      timeoutPromise
+    ]) as any
 
     console.log('Email sent via Resend:', result)
     return { success: true, messageId: result.data?.id }
@@ -91,7 +99,13 @@ export async function sendAutoReply(data: ContactEmailData) {
   const { name, email } = data
 
   try {
-    await resend.emails.send({
+    // Add timeout to prevent hanging
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Email timeout')), 10000)
+    )
+
+    await Promise.race([
+      resend.emails.send({
       from: 'StriveGhana <onboarding@resend.dev>',
       to: email,
       subject: 'Thank you for contacting StriveGhana - السعي',
@@ -128,7 +142,9 @@ export async function sendAutoReply(data: ContactEmailData) {
           </div>
         </div>
       `,
-    })
+      }),
+      timeoutPromise
+    ])
 
     console.log('Auto-reply sent via Resend')
   } catch (error) {

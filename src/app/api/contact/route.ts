@@ -38,16 +38,8 @@ export async function POST(request: NextRequest) {
       message,
     })
 
-    // Send email notifications (don't wait for them)
-    Promise.all([
-      sendContactNotification({ name, email, phone, subject, message }),
-      sendAutoReply({ name, email, phone, subject, message }),
-    ]).catch((error) => {
-      console.error('Email notification error:', error)
-      // Don't fail the request if email fails
-    })
-
-    return NextResponse.json(
+    // Send response immediately
+    const response = NextResponse.json(
       {
         success: true,
         message: 'Thank you for your message! We will get back to you soon.',
@@ -58,6 +50,18 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 }
     )
+
+    // Send email notifications in background (don't wait)
+    setImmediate(() => {
+      Promise.all([
+        sendContactNotification({ name, email, phone, subject, message }),
+        sendAutoReply({ name, email, phone, subject, message }),
+      ]).catch((error) => {
+        console.error('Email notification error:', error)
+      })
+    })
+
+    return response
   } catch (error: any) {
     console.error('Contact form error:', error)
     
