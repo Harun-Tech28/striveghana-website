@@ -16,7 +16,7 @@ export async function sendContactNotification(data: ContactEmailData) {
   try {
     const result = await resend.emails.send({
       from: 'StriveGhana <onboarding@resend.dev>', // Resend's test email
-      to: process.env.NOTIFICATION_EMAIL || 'striveghana@gmail.com',
+      to: process.env.NOTIFICATION_EMAIL || 'striveghana1@gmail.com',
       subject: `New Contact Form: ${subject || 'General Inquiry'}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -112,7 +112,7 @@ export async function sendAutoReply(data: ContactEmailData) {
             
             <div style="background: white; padding: 15px; border-radius: 4px; margin: 20px 0;">
               <h3 style="margin-top: 0; color: #1e3a8a;">Contact Information:</h3>
-              <p style="margin: 5px 0;">📧 Email: striveghana@gmail.com</p>
+              <p style="margin: 5px 0;">📧 Email: striveghana1@gmail.com</p>
               <p style="margin: 5px 0;">📱 Phone: 0542524571</p>
               <p style="margin: 5px 0;">💬 WhatsApp: <a href="https://wa.me/233542524571">Chat with us</a></p>
             </div>

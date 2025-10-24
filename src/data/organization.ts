@@ -8,7 +8,7 @@ export const organizationData = {
   vision: "To build a resilient, educated, and spiritually grounded generation that strives together for truth, purpose, and belonging in Islam.",
   
   contact: {
-    email: "striveghana@gmail.com",
+    email: "striveghana1@gmail.com",
     website: "striveghana.org",
     phone: "+233 54 252 4571",
     phoneDisplay: "0542524571",
