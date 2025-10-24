@@ -161,10 +161,10 @@ export default function DonatePage() {
                   💬 Chat on WhatsApp
                 </a>
                 <a 
-                  href="mailto:striveghana@gmail.com" 
+                  href="mailto:striveghana1@gmail.com" 
                   className="text-primary-500 hover:text-primary-600 text-sm"
                 >
-                  striveghana@gmail.com
+                  striveghana1@gmail.com
                 </a>
               </div>
               <div className="bg-white rounded-lg p-6">
