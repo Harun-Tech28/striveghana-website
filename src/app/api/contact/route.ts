@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import connectDB from '@/lib/mongodb'
 import Contact from '@/models/Contact'
-import { sendContactNotification, sendAutoReply } from '@/lib/email'
+import { sendContactNotification, sendAutoReply } from '@/lib/email-resend'
 
 export async function POST(request: NextRequest) {
   try {
