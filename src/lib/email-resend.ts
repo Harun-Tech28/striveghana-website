@@ -8,10 +8,15 @@ interface ContactEmailData {
   phone?: string
   subject?: string
   message: string
+  attachment?: {
+    filename: string
+    content: string
+    type: string
+  } | null
 }
 
 export async function sendContactNotification(data: ContactEmailData) {
-  const { name, email, phone, subject, message } = data
+  const { name, email, phone, subject, message, attachment } = data
 
   try {
     // Add timeout to prevent hanging
@@ -19,8 +24,8 @@ export async function sendContactNotification(data: ContactEmailData) {
       setTimeout(() => reject(new Error('Email timeout')), 10000)
     )
 
-    const result = await Promise.race([
-      resend.emails.send({
+    // Prepare email options
+    const emailOptions: any = {
       from: 'StriveGhana <onboarding@resend.dev>', // Resend's test email
       to: process.env.NOTIFICATION_EMAIL || 'striveghana1@gmail.com',
       subject: `New Contact Form: ${subject || 'General Inquiry'}`,
@@ -67,6 +72,15 @@ export async function sendContactNotification(data: ContactEmailData) {
               </div>
             </div>
             
+            ${attachment ? `
+            <div style="margin-bottom: 20px;">
+              <strong style="color: #1e3a8a;">📎 Attachment:</strong>
+              <div style="background: white; padding: 10px; border-radius: 4px; margin-top: 5px;">
+                ${attachment.filename}
+              </div>
+            </div>
+            ` : ''}
+            
             <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #e5e7eb;">
               <p style="margin: 0; color: #6b7280; font-size: 14px;">
                 <strong>Received:</strong> ${new Date().toLocaleString('en-US', { 
@@ -82,8 +96,19 @@ export async function sendContactNotification(data: ContactEmailData) {
             <p>Reply directly to <a href="mailto:${email}">${email}</a> to respond.</p>
           </div>
         </div>
-      `,
-      }),
+      `
+    }
+
+    // Add attachment if present
+    if (attachment) {
+      emailOptions.attachments = [{
+        filename: attachment.filename,
+        content: attachment.content.split(',')[1], // Remove data:image/png;base64, prefix
+      }]
+    }
+
+    const result = await Promise.race([
+      resend.emails.send(emailOptions),
       timeoutPromise
     ]) as any
 

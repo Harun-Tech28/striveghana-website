@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { motion } from 'framer-motion'
-import { Send, CheckCircle, AlertCircle } from 'lucide-react'
+import { Send, CheckCircle, AlertCircle, Paperclip, X } from 'lucide-react'
 
 interface ContactFormData {
   name: string
@@ -16,6 +16,8 @@ interface ContactFormData {
 const ContactForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [fileError, setFileError] = useState<string>('')
   
   const {
     register,
@@ -24,11 +26,59 @@ const ContactForm = () => {
     formState: { errors }
   } = useForm<ContactFormData>()
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    setFileError('')
+    
+    if (file) {
+      // Check file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        setFileError('File size must be less than 5MB')
+        setSelectedFile(null)
+        return
+      }
+      
+      // Check file type
+      const allowedTypes = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'image/jpeg',
+        'image/png',
+        'image/jpg'
+      ]
+      
+      if (!allowedTypes.includes(file.type)) {
+        setFileError('Only PDF, Word documents, and images (JPG, PNG) are allowed')
+        setSelectedFile(null)
+        return
+      }
+      
+      setSelectedFile(file)
+    }
+  }
+
+  const removeFile = () => {
+    setSelectedFile(null)
+    setFileError('')
+  }
+
   const onSubmit = async (data: ContactFormData) => {
     setIsSubmitting(true)
     setSubmitStatus('idle')
 
     try {
+      // Convert file to base64 if present
+      let fileData = null
+      if (selectedFile) {
+        const reader = new FileReader()
+        fileData = await new Promise((resolve, reject) => {
+          reader.onload = () => resolve(reader.result)
+          reader.onerror = reject
+          reader.readAsDataURL(selectedFile)
+        })
+      }
+
       // Send to our API endpoint
       const response = await fetch('/api/contact', {
         method: 'POST',
@@ -40,6 +90,11 @@ const ContactForm = () => {
           email: data.email,
           subject: `${data.interest}: ${data.subject}`,
           message: data.message,
+          attachment: fileData ? {
+            filename: selectedFile?.name,
+            content: fileData,
+            type: selectedFile?.type
+          } : null
         }),
       })
 
@@ -52,6 +107,7 @@ const ContactForm = () => {
       console.log('Form submitted successfully:', result)
       setSubmitStatus('success')
       reset()
+      removeFile()
     } catch (error) {
       console.error('Form submission error:', error)
       setSubmitStatus('error')
@@ -163,6 +219,50 @@ const ContactForm = () => {
           {errors.message && (
             <p className="mt-1 text-sm text-red-600">{errors.message.message}</p>
           )}
+        </div>
+
+        {/* File Upload */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Attach File (Optional)
+          </label>
+          <div className="flex items-center space-x-4">
+            <label className="flex-1 cursor-pointer">
+              <div className="w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary-500 transition-colors flex items-center justify-center space-x-2">
+                <Paperclip className="w-5 h-5 text-gray-400" />
+                <span className="text-gray-600">
+                  {selectedFile ? selectedFile.name : 'Click to attach a file'}
+                </span>
+              </div>
+              <input
+                type="file"
+                onChange={handleFileChange}
+                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                className="hidden"
+              />
+            </label>
+            {selectedFile && (
+              <button
+                type="button"
+                onClick={removeFile}
+                className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            )}
+          </div>
+          {selectedFile && (
+            <p className="mt-2 text-sm text-green-600 flex items-center space-x-1">
+              <CheckCircle className="w-4 h-4" />
+              <span>File attached: {selectedFile.name} ({(selectedFile.size / 1024).toFixed(2)} KB)</span>
+            </p>
+          )}
+          {fileError && (
+            <p className="mt-2 text-sm text-red-600">{fileError}</p>
+          )}
+          <p className="mt-2 text-xs text-gray-500">
+            Accepted formats: PDF, Word (.doc, .docx), Images (JPG, PNG). Max size: 5MB
+          </p>
         </div>
 
         {/* Submit Button */}

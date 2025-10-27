@@ -81,6 +81,7 @@ const DonationForm = () => {
     reference: `STRIVE-${new Date().getTime()}`,
     email: formData?.email || watchEmail || '',
     amount: Math.round(finalAmount * 100 * 16), // Convert USD to GHS (approx rate) and kobo
+    currency: 'GHS', // Ghana Cedis
     publicKey: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || 'pk_test_xxxx',
     text: 'Donate Now',
     metadata: {
@@ -107,9 +108,10 @@ const DonationForm = () => {
         }
       ]
     },
-    channels: formData?.paymentMethod === 'mobilemoney' 
-      ? ['mobile_money'] 
-      : ['card'],
+    // Let Paystack auto-detect available channels
+    // channels: formData?.paymentMethod === 'mobilemoney' 
+    //   ? ['mobile_money'] 
+    //   : ['card'],
     onSuccess: onPaymentSuccess,
     onClose: onPaymentClose,
   }
