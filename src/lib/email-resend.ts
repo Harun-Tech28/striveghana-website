@@ -1,6 +1,13 @@
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Create Resend instance only when needed
+function getResendClient() {
+  const apiKey = process.env.RESEND_API_KEY
+  if (!apiKey) {
+    throw new Error('RESEND_API_KEY environment variable is not set')
+  }
+  return new Resend(apiKey)
+}
 
 interface ContactEmailData {
   name: string
@@ -107,6 +114,7 @@ export async function sendContactNotification(data: ContactEmailData) {
       }]
     }
 
+    const resend = getResendClient()
     const result = await Promise.race([
       resend.emails.send(emailOptions),
       timeoutPromise
@@ -129,6 +137,7 @@ export async function sendAutoReply(data: ContactEmailData) {
       setTimeout(() => reject(new Error('Email timeout')), 10000)
     )
 
+    const resend = getResendClient()
     await Promise.race([
       resend.emails.send({
       from: 'StriveGhana <onboarding@resend.dev>',
