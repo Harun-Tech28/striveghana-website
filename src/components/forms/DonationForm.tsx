@@ -82,7 +82,7 @@ const DonationForm = () => {
     email: formData?.email || watchEmail || '',
     amount: Math.round(finalAmount * 100 * 16), // Convert USD to GHS (approx rate) and kobo
     currency: 'GHS', // Ghana Cedis
-    publicKey: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || 'pk_test_xxxx',
+    publicKey: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || 'pk_test_573f55ec926ffe2953741d0e71614fc17768ddc5',
     text: 'Donate Now',
     metadata: {
       custom_fields: [
