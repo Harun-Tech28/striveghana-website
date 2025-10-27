@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { sendContactNotification, sendAutoReply } from '@/lib/email-resend'
 
+// Mark this route as dynamic
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 export async function POST(request: NextRequest) {
   try {
     // Parse request body
